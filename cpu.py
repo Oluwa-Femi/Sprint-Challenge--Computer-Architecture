@@ -18,6 +18,8 @@ SUB = 0b10100001
 CMP = 0b10100111
 EQ = 0b00000111
 JMP = 0b01010100
+JEQ = 0b01010101
+JNE = 0b01010110
 
 class CPU:
     """Main CPU class."""
@@ -40,7 +42,9 @@ class CPU:
             CALL : self.CALL,
             RET : self.RET,
             CMP : self.CMP,
-            JMP : self.JMP
+            JMP : self.JMP,
+            JEQ : self.JEQ,
+            JNE : self.JNE
         }
 
     def load(self):
@@ -157,6 +161,18 @@ class CPU:
 
     def JMP(self, reg_a, reg_b):
         self.pc = self.reg[reg_a]
+
+    def JEQ(self, reg_a, reg_b):
+        if self.flag_reg[EQ] == 0b00000001:
+            self.pc = self.reg[reg_a]
+        else:
+            self.pc += 2
+
+    def JNE(self, reg_a, reg_b):
+        if self.flag_reg[EQ] == 0b00000000:
+            self.pc = self.reg[reg_a]
+        else:
+            self.pc += 2
 
     def run(self):
         while self.running:
